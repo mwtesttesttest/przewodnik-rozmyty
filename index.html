@@ -41,7 +41,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      margin-top: 35px;
+      margin-top: 180px;
       width: 100%;
       max-width: 350px;
     }
@@ -112,6 +112,39 @@
       margin-top: 20px;
     }
 
+    .map {
+      display: grid;
+      grid-template-columns: repeat(4, 80px);
+      gap: 20px;
+      justify-content: center;
+      margin-top: 40px;
+    }
+
+    .table {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background-color: #ffffffaa;
+      color: #000;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .table.highlight {
+      background-color: gold;
+      box-shadow: 0 0 20px 8px gold;
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.15); }
+      100% { transform: scale(1); }
+    }
+
     @media (max-width: 480px) {
       input {
         padding: 12px;
@@ -139,6 +172,20 @@
   </div>
 
   <div id="result" aria-live="polite" role="alert"></div>
+
+  <div id="map" class="map">
+    <div class="table" data-number="1">1</div>
+    <div class="table" data-number="2">2</div>
+    <div class="table" data-number="3">3</div>
+    <div class="table" data-number="4">4</div>
+    <div class="table" data-number="5">5</div>
+    <div class="table" data-number="12">12</div>
+    <div class="table" data-number="13">13</div>
+    <div class="table" data-number="14">14</div>
+    <div class="table" data-number="15">15</div>
+    <div class="table" data-number="16">16</div>
+    <div class="table" data-number="18">18</div>
+  </div>
 
   <script>
     const guests = {
@@ -202,10 +249,6 @@
         const normalizedName = normalizeName(name);
         const nameWords = normalizedName.split(/\s+/);
 
-        const partialMatch = inputWords.every(inputWord =>
-          nameWords.some(nameWord => nameWord.includes(inputWord))
-        );
-
         const minDistanceAmongWords = Math.min(...inputWords.flatMap(iw =>
           nameWords.map(nw => levenshtein(iw, nw))
         ));
@@ -218,11 +261,24 @@
         }
       }
 
-      const maxDistance = 5; // większy margines błędu
+      const maxDistance = 5;
 
       if (closestGuest && smallestDistance <= maxDistance) {
         showResult(`Witaj, <strong>${closestGuest[0]}</strong>! Twój stół to numer <strong>${closestGuest[1]}</strong>.<br>
           <img src="stol.png" alt="Stół" class="table-image">`);
+
+        // 📳 Wibracja
+        if (navigator.vibrate) {
+          navigator.vibrate(300);
+        }
+
+        // ✨ Podświetl odpowiedni stół
+        document.querySelectorAll('.table').forEach(el => el.classList.remove('highlight'));
+        const tableEl = document.querySelector(`.table[data-number='${closestGuest[1]}']`);
+        if (tableEl) {
+          tableEl.classList.add('highlight');
+        }
+
       } else {
         showResult("Nie znaleziono gościa o podanym imieniu i nazwisku.");
       }
@@ -232,7 +288,6 @@
       const resultDiv = document.getElementById('result');
       resultDiv.innerHTML = html;
       resultDiv.classList.add('show');
-
       setTimeout(() => {
         resultDiv.classList.remove('show');
       }, 8000);
@@ -247,4 +302,3 @@
 
 </body>
 </html>
-
