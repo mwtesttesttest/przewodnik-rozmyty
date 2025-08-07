@@ -206,8 +206,6 @@
           nameWords.some(nameWord => nameWord.includes(inputWord))
         );
 
-        if (!partialMatch) continue;
-
         const minDistanceAmongWords = Math.min(...inputWords.flatMap(iw =>
           nameWords.map(nw => levenshtein(iw, nw))
         ));
@@ -220,7 +218,7 @@
         }
       }
 
-      const maxDistance = 3;
+      const maxDistance = 5; // większy margines błędu
 
       if (closestGuest && smallestDistance <= maxDistance) {
         showResult(`Witaj, <strong>${closestGuest[0]}</strong>! Twój stół to numer <strong>${closestGuest[1]}</strong>.<br>
