@@ -10,8 +10,7 @@
       padding: 0;
       height: 100%;
       width: 100%;
-      overflow: hidden; /* blokada przewijania */
-      overscroll-behavior: none; /* blokada efektu gumki */
+      overflow-x: hidden;
       font-family: Arial, sans-serif;
     }
 
@@ -23,20 +22,13 @@
       background-repeat: no-repeat;
       background-attachment: fixed;
       color: #fff;
-    }
-
-    .container {
-      position: fixed; /* stała pozycja na ekranie */
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: flex-start;
-      padding: 50px 20px;
+      min-height: 100vh;
       box-sizing: border-box;
+      padding: 50px 20px;
     }
 
     .logo {
@@ -77,6 +69,7 @@
       width: 48px;
       height: 48px;
       font-size: 20px;
+      margin-left: 0;
       cursor: pointer;
       border: none;
       border-radius: 0 4px 4px 0;
@@ -106,6 +99,7 @@
       opacity: 0;
       transform: translateY(10px);
       transition: opacity 0.5s ease, transform 0.5s ease;
+      position: relative;
     }
 
     #result.show {
@@ -116,6 +110,20 @@
     .table-image {
       width: 100px;
       margin-top: 20px;
+    }
+
+    /* Animacja wibracji */
+    @keyframes shake {
+      0% { transform: translateX(0); }
+      20% { transform: translateX(-5px); }
+      40% { transform: translateX(5px); }
+      60% { transform: translateX(-5px); }
+      80% { transform: translateX(5px); }
+      100% { transform: translateX(0); }
+    }
+
+    .shake {
+      animation: shake 0.5s;
     }
 
     @media (max-width: 480px) {
@@ -136,16 +144,15 @@
   </style>
 </head>
 <body>
-  <div class="container">
-    <img src="logo.png" alt="Logo imprezy" class="logo" />
 
-    <div class="input-group">
-      <input type="text" id="guestName" placeholder="Imię i nazwisko" autocomplete="off" aria-label="Wpisz imię i nazwisko" />
-      <button onclick="findTable()" aria-label="Szukaj">🔍</button>
-    </div>
+  <img src="logo.png" alt="Logo imprezy" class="logo" />
 
-    <div id="result" aria-live="polite" role="alert"></div>
+  <div class="input-group">
+    <input type="text" id="guestName" placeholder="Imię i nazwisko" autocomplete="off" aria-label="Wpisz imię i nazwisko" />
+    <button onclick="findTable()" aria-label="Szukaj">🔍</button>
   </div>
+
+  <div id="result" aria-live="polite" role="alert"></div>
 
   <script>
     const guests = {
@@ -191,6 +198,9 @@
       const input = document.getElementById('guestName');
       const rawInput = input.value.trim();
       const nameInput = normalizeName(rawInput);
+      const resultDiv = document.getElementById('result');
+
+      input.blur();
 
       if (!nameInput) {
         showResult("Proszę wpisać imię i nazwisko.");
@@ -206,6 +216,10 @@
         const normalizedName = normalizeName(name);
         const nameWords = normalizedName.split(/\s+/);
 
+        const partialMatch = inputWords.every(inputWord =>
+          nameWords.some(nameWord => nameWord.includes(inputWord))
+        );
+
         const minDistanceAmongWords = Math.min(...inputWords.flatMap(iw =>
           nameWords.map(nw => levenshtein(iw, nw))
         ));
@@ -218,20 +232,25 @@
         }
       }
 
-      const maxDistance = 5;
+      const maxDistance = 5; // większy margines błędu
 
       if (closestGuest && smallestDistance <= maxDistance) {
         showResult(`Witaj, <strong>${closestGuest[0]}</strong>! Twój stół to numer <strong>${closestGuest[1]}</strong>.<br>
-          <img src="stol.png" alt="Stół" class="table-image">`);
+          <img src="stol.png" alt="Stół" class="table-image">`, true);
       } else {
         showResult("Nie znaleziono gościa o podanym imieniu i nazwisku.");
       }
     }
 
-    function showResult(html) {
+    function showResult(html, shake = false) {
       const resultDiv = document.getElementById('result');
       resultDiv.innerHTML = html;
       resultDiv.classList.add('show');
+
+      if (shake) {
+        resultDiv.classList.add('shake');
+        setTimeout(() => resultDiv.classList.remove('shake'), 500);
+      }
 
       setTimeout(() => {
         resultDiv.classList.remove('show');
@@ -244,5 +263,6 @@
       }
     });
   </script>
+
 </body>
 </html>
