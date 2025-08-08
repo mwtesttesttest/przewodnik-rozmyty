@@ -233,6 +233,11 @@
       resultDiv.innerHTML = html;
       resultDiv.classList.add('show');
 
+      // Wibracja na urządzeniach obsługujących tę funkcję (np. Android)
+      if (navigator.vibrate) {
+        navigator.vibrate([200, 100, 200]); // wibracja, przerwa, wibracja
+      }
+
       setTimeout(() => {
         resultDiv.classList.remove('show');
       }, 8000);
