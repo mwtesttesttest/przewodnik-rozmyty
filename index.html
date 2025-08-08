@@ -10,7 +10,8 @@
       padding: 0;
       height: 100%;
       width: 100%;
-      overflow-x: hidden;
+      overflow: hidden; /* blokada przewijania */
+      overscroll-behavior: none; /* blokada efektu gumki */
       font-family: Arial, sans-serif;
     }
 
@@ -22,13 +23,20 @@
       background-repeat: no-repeat;
       background-attachment: fixed;
       color: #fff;
+    }
+
+    .container {
+      position: fixed; /* stała pozycja na ekranie */
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: flex-start;
-      min-height: 100vh;
-      box-sizing: border-box;
       padding: 50px 20px;
+      box-sizing: border-box;
     }
 
     .logo {
@@ -69,7 +77,6 @@
       width: 48px;
       height: 48px;
       font-size: 20px;
-      margin-left: 0;
       cursor: pointer;
       border: none;
       border-radius: 0 4px 4px 0;
@@ -99,7 +106,6 @@
       opacity: 0;
       transform: translateY(10px);
       transition: opacity 0.5s ease, transform 0.5s ease;
-      position: relative;
     }
 
     #result.show {
@@ -130,15 +136,16 @@
   </style>
 </head>
 <body>
+  <div class="container">
+    <img src="logo.png" alt="Logo imprezy" class="logo" />
 
-  <img src="logo.png" alt="Logo imprezy" class="logo" />
+    <div class="input-group">
+      <input type="text" id="guestName" placeholder="Imię i nazwisko" autocomplete="off" aria-label="Wpisz imię i nazwisko" />
+      <button onclick="findTable()" aria-label="Szukaj">🔍</button>
+    </div>
 
-  <div class="input-group">
-    <input type="text" id="guestName" placeholder="Imię i nazwisko" autocomplete="off" aria-label="Wpisz imię i nazwisko" />
-    <button onclick="findTable()" aria-label="Szukaj">🔍</button>
+    <div id="result" aria-live="polite" role="alert"></div>
   </div>
-
-  <div id="result" aria-live="polite" role="alert"></div>
 
   <script>
     const guests = {
@@ -184,9 +191,6 @@
       const input = document.getElementById('guestName');
       const rawInput = input.value.trim();
       const nameInput = normalizeName(rawInput);
-      const resultDiv = document.getElementById('result');
-
-      input.blur();
 
       if (!nameInput) {
         showResult("Proszę wpisać imię i nazwisko.");
@@ -202,10 +206,6 @@
         const normalizedName = normalizeName(name);
         const nameWords = normalizedName.split(/\s+/);
 
-        const partialMatch = inputWords.every(inputWord =>
-          nameWords.some(nameWord => nameWord.includes(inputWord))
-        );
-
         const minDistanceAmongWords = Math.min(...inputWords.flatMap(iw =>
           nameWords.map(nw => levenshtein(iw, nw))
         ));
@@ -218,7 +218,7 @@
         }
       }
 
-      const maxDistance = 5; // większy margines błędu
+      const maxDistance = 5;
 
       if (closestGuest && smallestDistance <= maxDistance) {
         showResult(`Witaj, <strong>${closestGuest[0]}</strong>! Twój stół to numer <strong>${closestGuest[1]}</strong>.<br>
@@ -244,6 +244,5 @@
       }
     });
   </script>
-
 </body>
 </html>
