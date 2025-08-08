@@ -112,20 +112,6 @@
       margin-top: 20px;
     }
 
-    /* Animacja wibracji */
-    @keyframes shake {
-      0% { transform: translateX(0); }
-      20% { transform: translateX(-5px); }
-      40% { transform: translateX(5px); }
-      60% { transform: translateX(-5px); }
-      80% { transform: translateX(5px); }
-      100% { transform: translateX(0); }
-    }
-
-    .shake {
-      animation: shake 0.5s;
-    }
-
     @media (max-width: 480px) {
       input {
         padding: 12px;
@@ -236,21 +222,16 @@
 
       if (closestGuest && smallestDistance <= maxDistance) {
         showResult(`Witaj, <strong>${closestGuest[0]}</strong>! Twój stół to numer <strong>${closestGuest[1]}</strong>.<br>
-          <img src="stol.png" alt="Stół" class="table-image">`, true);
+          <img src="stol.png" alt="Stół" class="table-image">`);
       } else {
         showResult("Nie znaleziono gościa o podanym imieniu i nazwisku.");
       }
     }
 
-    function showResult(html, shake = false) {
+    function showResult(html) {
       const resultDiv = document.getElementById('result');
       resultDiv.innerHTML = html;
       resultDiv.classList.add('show');
-
-      if (shake) {
-        resultDiv.classList.add('shake');
-        setTimeout(() => resultDiv.classList.remove('shake'), 500);
-      }
 
       setTimeout(() => {
         resultDiv.classList.remove('show');
