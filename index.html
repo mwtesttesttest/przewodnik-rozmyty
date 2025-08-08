@@ -29,6 +29,22 @@
       min-height: 100vh;
       box-sizing: border-box;
       padding: 50px 20px;
+      transition: box-shadow 0.5s ease;
+    }
+
+    /* Efekt glow */
+    .glow {
+      box-shadow: 0 0 50px 20px rgba(255, 215, 0, 0.6) inset;
+      animation: glowPulse 1.5s ease-in-out infinite alternate;
+    }
+
+    @keyframes glowPulse {
+      from {
+        box-shadow: 0 0 50px 20px rgba(255, 215, 0, 0.6) inset;
+      }
+      to {
+        box-shadow: 0 0 80px 40px rgba(255, 215, 0, 0.9) inset;
+      }
     }
 
     .logo {
@@ -140,6 +156,9 @@
 
   <div id="result" aria-live="polite" role="alert"></div>
 
+  <!-- Dźwięk powiadomienia -->
+  <audio id="successSound" src="https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg" preload="auto"></audio>
+
   <script>
     const guests = {
       "Jan Kowalski": 3,
@@ -218,7 +237,7 @@
         }
       }
 
-      const maxDistance = 5; // większy margines błędu
+      const maxDistance = 5;
 
       if (closestGuest && smallestDistance <= maxDistance) {
         showResult(`Witaj, <strong>${closestGuest[0]}</strong>! Twój stół to numer <strong>${closestGuest[1]}</strong>.<br>
@@ -233,13 +252,22 @@
       resultDiv.innerHTML = html;
       resultDiv.classList.add('show');
 
-      // Wibracja na urządzeniach obsługujących tę funkcję (np. Android)
+      // Efekt glow
+      document.body.classList.add('glow');
+
+      // Wibracja (Android)
       if (navigator.vibrate) {
-        navigator.vibrate([200, 100, 200]); // wibracja, przerwa, wibracja
+        navigator.vibrate([200, 100, 200]);
       }
+
+      // Dźwięk (Android + iOS)
+      const sound = document.getElementById('successSound');
+      sound.currentTime = 0;
+      sound.play().catch(() => {});
 
       setTimeout(() => {
         resultDiv.classList.remove('show');
+        document.body.classList.remove('glow');
       }, 8000);
     }
 
