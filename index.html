@@ -218,59 +218,87 @@
       input.blur();
 
       if (!nameInput) {
-        showResult("Proszę wpisać imię i nazwisko.");
+        showResult("Proszę wpisać imię i nazwisko lub nazwisko.");
         return;
       }
 
       const inputWords = nameInput.split(/\s+/).filter(Boolean);
-      if (inputWords.length < 2) {
-        showResult("Proszę wpisać pełne imię i nazwisko.");
-        return;
-      }
 
-      let [inputFirst, inputLast] = inputWords;
-      inputFirst = mapNicknameToFull(inputFirst);
+      if (inputWords.length === 1) {
+        // Szukamy po nazwisku
+        const lastName = inputWords[0];
+        const matches = [];
 
-      // Dokładne dopasowanie
-      for (const [name, table] of Object.entries(guests)) {
-        const normalizedFull = normalizeName(name);
-        const [fullFirst, fullLast] = normalizedFull.split(" ");
-        if (mapNicknameToFull(fullFirst) === inputFirst && fullLast === inputLast) {
-          showResult(`Witaj, <strong>${name}</strong>! Twój stół to numer <strong>${table}</strong>.<br>
+        for (const [name, table] of Object.entries(guests)) {
+          const normalizedFull = normalizeName(name);
+          const parts = normalizedFull.split(" ");
+          if (parts.length < 2) continue;
+          const fullLast = parts[1];
+          const distance = levenshtein(fullLast, lastName);
+          if (distance <= 2) { // dopuszczalna różnica literówek
+            matches.push([name, table, distance]);
+          }
+        }
+
+        if (matches.length === 1) {
+          const [foundName, foundTable] = matches[0];
+          showResult(`Witaj, <strong>${foundName}</strong>! Twój stół to numer <strong>${foundTable}</strong>.<br>
             <img src="stol.png" alt="Stół" class="table-image">`);
+          return;
+        } else if (matches.length > 1) {
+          showResult("Znaleziono kilka osób o tym nazwisku. Proszę podać imię i nazwisko.");
+          return;
+        } else {
+          showResult("Nie znaleziono gościa o podanym nazwisku.");
           return;
         }
       }
 
-      // Przybliżone dopasowanie z wagą
-      let bestMatch = null;
-      let bestScore = Infinity;
+      if (inputWords.length >= 2) {
+        let [inputFirst, inputLast] = inputWords;
+        inputFirst = mapNicknameToFull(inputFirst);
 
-      for (const [name, table] of Object.entries(guests)) {
-        const normalizedName = normalizeName(name);
-        const nameParts = normalizedName.split(/\s+/);
-        if (nameParts.length < 2) continue;
-
-        let [first, last] = nameParts;
-        first = mapNicknameToFull(first);
-
-        const firstDistance = levenshtein(first, inputFirst);
-        const lastDistance = levenshtein(last, inputLast);
-
-        const weightedScore = firstDistance * 1 + lastDistance * 2;
-
-        if (weightedScore < bestScore) {
-          bestScore = weightedScore;
-          bestMatch = [name, table];
+        // Dokładne dopasowanie
+        for (const [name, table] of Object.entries(guests)) {
+          const normalizedFull = normalizeName(name);
+          const [fullFirst, fullLast] = normalizedFull.split(" ");
+          if (mapNicknameToFull(fullFirst) === inputFirst && fullLast === inputLast) {
+            showResult(`Witaj, <strong>${name}</strong>! Twój stół to numer <strong>${table}</strong>.<br>
+              <img src="stol.png" alt="Stół" class="table-image">`);
+            return;
+          }
         }
-      }
 
-      const maxScore = 5;
-      if (bestMatch && bestScore <= maxScore) {
-        showResult(`Witaj, <strong>${bestMatch[0]}</strong>! Twój stół to numer <strong>${bestMatch[1]}</strong>.<br>
-          <img src="stol.png" alt="Stół" class="table-image">`);
-      } else {
-        showResult("Nie znaleziono gościa o podanym imieniu i nazwisku.");
+        // Przybliżone dopasowanie z wagą
+        let bestMatch = null;
+        let bestScore = Infinity;
+
+        for (const [name, table] of Object.entries(guests)) {
+          const normalizedName = normalizeName(name);
+          const nameParts = normalizedName.split(/\s+/);
+          if (nameParts.length < 2) continue;
+
+          let [first, last] = nameParts;
+          first = mapNicknameToFull(first);
+
+          const firstDistance = levenshtein(first, inputFirst);
+          const lastDistance = levenshtein(last, inputLast);
+
+          const weightedScore = firstDistance * 1 + lastDistance * 2;
+
+          if (weightedScore < bestScore) {
+            bestScore = weightedScore;
+            bestMatch = [name, table];
+          }
+        }
+
+        const maxScore = 4;
+        if (bestMatch && bestScore <= maxScore) {
+          showResult(`Witaj, <strong>${bestMatch[0]}</strong>! Twój stół to numer <strong>${bestMatch[1]}</strong>.<br>
+            <img src="stol.png" alt="Stół" class="table-image">`);
+        } else {
+          showResult("Nie znaleziono gościa o podanym imieniu i nazwisku.");
+        }
       }
     }
 
@@ -293,4 +321,3 @@
 
 </body>
 </html>
-
