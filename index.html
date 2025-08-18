@@ -193,7 +193,15 @@
         return;
       }
 
-      // 1. Dokładne dopasowanie
+      const inputWords = nameInput.split(/\s+/).filter(Boolean);
+      if (inputWords.length < 2) {
+        showResult("Proszę wpisać pełne imię i nazwisko.");
+        return;
+      }
+
+      const [inputFirst, inputLast] = inputWords;
+
+      // Dokładne dopasowanie
       for (const [name, table] of Object.entries(guests)) {
         if (normalizeName(name) === nameInput) {
           showResult(`Witaj, <strong>${name}</strong>! Twój stół to numer <strong>${table}</strong>.<br>
@@ -202,33 +210,35 @@
         }
       }
 
-      // 2. Przybliżone dopasowanie (jeśli brak dokładnego)
-      const inputWords = nameInput.split(/\s+/).filter(Boolean);
-      let closestGuest = null;
-      let smallestDistance = Infinity;
+      // Przybliżone dopasowanie z wagą
+      let bestMatch = null;
+      let bestScore = Infinity;
 
       for (const [name, table] of Object.entries(guests)) {
         const normalizedName = normalizeName(name);
-        const nameWords = normalizedName.split(/\s+/);
+        const nameParts = normalizedName.split(/\s+/);
 
-        const minDistanceAmongWords = Math.min(...inputWords.flatMap(iw =>
-          nameWords.map(nw => levenshtein(iw, nw))
-        ));
+        if (nameParts.length < 2) continue;
 
-        const fullDistance = levenshtein(normalizedName, nameInput);
-        const distance = Math.min(fullDistance, minDistanceAmongWords);
+        const [first, last] = nameParts;
 
-        if (distance < smallestDistance) {
-          smallestDistance = distance;
-          closestGuest = [name, table];
+        const firstDistance = levenshtein(first, inputFirst);
+        const lastDistance = levenshtein(last, inputLast);
+
+        // Nazwisko ważniejsze niż imię
+        const weightedScore = firstDistance * 1 + lastDistance * 2;
+
+        if (weightedScore < bestScore) {
+          bestScore = weightedScore;
+          bestMatch = [name, table];
         }
       }
 
-      const maxDistance = 2;
+      const maxScore = 4;
 
-      if (closestGuest && smallestDistance <= maxDistance) {
-  showResult(`Witaj, <strong>${closestGuest[0]}</strong>! Twój stół to numer <strong>${closestGuest[1]}</strong>.<br>
-    <img src="stol.png" alt="Stół" class="table-image">`);
+      if (bestMatch && bestScore <= maxScore) {
+        showResult(`Witaj, <strong>${bestMatch[0]}</strong>! Twój stół to numer <strong>${bestMatch[1]}</strong>.<br>
+          <img src="stol.png" alt="Stół" class="table-image">`);
       } else {
         showResult("Nie znaleziono gościa o podanym imieniu i nazwisku.");
       }
@@ -253,5 +263,4 @@
 
 </body>
 </html>
-
 
