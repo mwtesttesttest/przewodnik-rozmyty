@@ -193,8 +193,17 @@
         return;
       }
 
-      const inputWords = nameInput.split(/\s+/).filter(Boolean);
+      // 1. Dokładne dopasowanie
+      for (const [name, table] of Object.entries(guests)) {
+        if (normalizeName(name) === nameInput) {
+          showResult(`Witaj, <strong>${name}</strong>! Twój stół to numer <strong>${table}</strong>.<br>
+            <img src="stol.png" alt="Stół" class="table-image">`);
+          return;
+        }
+      }
 
+      // 2. Przybliżone dopasowanie (jeśli brak dokładnego)
+      const inputWords = nameInput.split(/\s+/).filter(Boolean);
       let closestGuest = null;
       let smallestDistance = Infinity;
 
@@ -202,13 +211,10 @@
         const normalizedName = normalizeName(name);
         const nameWords = normalizedName.split(/\s+/);
 
-        const partialMatch = inputWords.every(inputWord =>
-          nameWords.some(nameWord => nameWord.includes(inputWord))
-        );
-
         const minDistanceAmongWords = Math.min(...inputWords.flatMap(iw =>
           nameWords.map(nw => levenshtein(iw, nw))
         ));
+
         const fullDistance = levenshtein(normalizedName, nameInput);
         const distance = Math.min(fullDistance, minDistanceAmongWords);
 
@@ -218,10 +224,10 @@
         }
       }
 
-      const maxDistance = 2; // większy margines błędu
+      const maxDistance = 2;
 
       if (closestGuest && smallestDistance <= maxDistance) {
-        showResult(`Witaj, <strong>${closestGuest[0]}</strong>! Twój stół to numer <strong>${closestGuest[1]}</strong>.<br>
+        showResult(`Czy chodziło Ci o <strong>${closestGuest[0]}</strong>?<br>Stół: <strong>${closestGuest[1]}</strong>.<br>
           <img src="stol.png" alt="Stół" class="table-image">`);
       } else {
         showResult("Nie znaleziono gościa o podanym imieniu i nazwisku.");
@@ -247,6 +253,4 @@
 
 </body>
 </html>
-
-
 
