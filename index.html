@@ -227,8 +227,8 @@
       const maxDistance = 2;
 
       if (closestGuest && smallestDistance <= maxDistance) {
-        showResult(`Czy chodziło Ci o <strong>${closestGuest[0]}</strong>?<br>Stół: <strong>${closestGuest[1]}</strong>.<br>
-          <img src="stol.png" alt="Stół" class="table-image">`);
+  showResult(`Witaj, <strong>${closestGuest[0]}</strong>! Twój stół to numer <strong>${closestGuest[1]}</strong>.<br>
+    <img src="stol.png" alt="Stół" class="table-image">`);
       } else {
         showResult("Nie znaleziono gościa o podanym imieniu i nazwisku.");
       }
@@ -253,4 +253,5 @@
 
 </body>
 </html>
+
 
