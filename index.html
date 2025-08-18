@@ -152,11 +152,40 @@
       "Izabela Bogucka": 14,
       "Kinga Wilczyńska": 15,
       "Alicja Szulc": 16,
-      "Dawid Dudziński": 18
+      "Dawid Dudziński": 18,
+      "Joanna Nowak": 17,
+      "Bartosz Kowalski": 19
+    };
+
+    const nicknameMap = {
+      "ola": "aleksandra",
+      "aleks": "aleksandra",
+      "sandra": "aleksandra",
+      "alutka": "aleksandra",
+      "matek": "mateusz",
+      "mati": "mateusz",
+      "iza": "izabela",
+      "zuzia": "zuzanna",
+      "zuzka": "zuzanna",
+      "ala": "alicja",
+      "kasia": "katarzyna",
+      "kacha": "katarzyna",
+      "basia": "barbara",
+      "gosia": "małgorzata",
+      "małgosia": "małgorzata",
+      "asia": "joanna",
+      "joasia": "joanna",
+      "bartek": "bartosz",
+      "piotruś": "piotr",
+      "krzyś": "krzysztof"
     };
 
     function normalizeName(str) {
       return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+    }
+
+    function mapNicknameToFull(name) {
+      return nicknameMap[name] || name;
     }
 
     function levenshtein(a, b) {
@@ -199,11 +228,14 @@
         return;
       }
 
-      const [inputFirst, inputLast] = inputWords;
+      let [inputFirst, inputLast] = inputWords;
+      inputFirst = mapNicknameToFull(inputFirst);
 
       // Dokładne dopasowanie
       for (const [name, table] of Object.entries(guests)) {
-        if (normalizeName(name) === nameInput) {
+        const normalizedFull = normalizeName(name);
+        const [fullFirst, fullLast] = normalizedFull.split(" ");
+        if (mapNicknameToFull(fullFirst) === inputFirst && fullLast === inputLast) {
           showResult(`Witaj, <strong>${name}</strong>! Twój stół to numer <strong>${table}</strong>.<br>
             <img src="stol.png" alt="Stół" class="table-image">`);
           return;
@@ -217,15 +249,14 @@
       for (const [name, table] of Object.entries(guests)) {
         const normalizedName = normalizeName(name);
         const nameParts = normalizedName.split(/\s+/);
-
         if (nameParts.length < 2) continue;
 
-        const [first, last] = nameParts;
+        let [first, last] = nameParts;
+        first = mapNicknameToFull(first);
 
         const firstDistance = levenshtein(first, inputFirst);
         const lastDistance = levenshtein(last, inputLast);
 
-        // Nazwisko ważniejsze niż imię
         const weightedScore = firstDistance * 1 + lastDistance * 2;
 
         if (weightedScore < bestScore) {
@@ -235,7 +266,6 @@
       }
 
       const maxScore = 4;
-
       if (bestMatch && bestScore <= maxScore) {
         showResult(`Witaj, <strong>${bestMatch[0]}</strong>! Twój stół to numer <strong>${bestMatch[1]}</strong>.<br>
           <img src="stol.png" alt="Stół" class="table-image">`);
@@ -263,4 +293,3 @@
 
 </body>
 </html>
-
