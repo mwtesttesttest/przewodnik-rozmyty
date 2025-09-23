@@ -141,57 +141,70 @@
   <div id="result" aria-live="polite" role="alert"></div>
 
   <script>
-    const names = [
-      "Michał Niewęgłowski",
-      "Aleksandra Olszyńska",
-      "Aleksandra Makarewicz",
-      "Olga Wojdyga",
-      "Zuzanna Bolek",
-      "Mateusz Wunderlich",
-      "Maja Chodór",
-      "Izabela Bogucka",
-      "Kinga Wilczyńska",
-      "Alicja Szulc",
-      "Dawid Dudziński",
-      "Joanna Nowak",
-      "Bartosz Kowalski",
-      "Julia Kot",
-      "Julcia Kot"
-    ];
-
-    const guests = {};
-
-    names.forEach((name, i) => {
-      if (i < 4) {
-        guests[name] = 1; // pierwsze 4 osoby -> stół 1
-      } else if (i < 8) {
-        guests[name] = 3; // kolejne 4 osoby -> stół 3
-      } else {
-        guests[name] = 5; // reszta -> stół 5
-      }
-    });
+    const guests = {
+      "Michał Niewęgłowski": 3,
+      "Aleksandra Olszyńska": 5,
+      "Aleksandra Makarewicz": 1,
+      "Olga Wojdyga": 2,
+      "Zuzanna Bolek": 4,
+      "Mateusz Wunderlich": 12,
+      "Maja Chodór": 13,
+      "Izabela Bogucka": 14,
+      "Kinga Wilczyńska": 15,
+      "Alicja Szulc": 16,
+      "Dawid Dudziński": 18,
+      "Joanna Nowak": 17,
+      "Bartosz Kowalski": 19,
+      "Julia Kot": 18,
+      "Magdalena Kot": 200,
+    };
 
     const nicknameMap = {
       "ola": "aleksandra",
-      "aleks": "aleksandra",
-      "sandra": "aleksandra",
-      "alutka": "aleksandra",
-      "matek": "mateusz",
       "mati": "mateusz",
       "iza": "izabela",
       "zuzia": "zuzanna",
-      "zuzka": "zuzanna",
-      "ala": "alicja",
       "kasia": "katarzyna",
-      "kacha": "katarzyna",
       "basia": "barbara",
       "gosia": "małgorzata",
       "małgosia": "małgorzata",
       "asia": "joanna",
       "joasia": "joanna",
       "bartek": "bartosz",
-      "piotruś": "piotr",
-      "krzyś": "krzysztof"
+      "piotrek": "piotr",
+      "krzyś": "krzysztof",
+"Maciek": "Maciej",
+"Oliwka": "Oliwka",
+"Kuba": "Jakub",
+"Paula": "Paulina",
+"Wojtek": "Wojciech",
+"Wera": "Weronika",
+"Ala": "Alicja",
+"Ania": "Anna",
+"Zosia": "Zofia",
+"Tomek": "Tomek",
+"Pola": "Apolonia",
+"Magda": "Magdalena",
+"Madzia": "Magdalena",
+"Kvitka": "Kvitoslava",
+"Gabrysia": "Gabriela",
+"Jola": "Jolanta",
+"Michasia": "Michalina",
+"Marysia": "Maria",
+"Janek": "Jan",
+"Ania": "Anna",
+"Stasiek": "Stanisław",
+"Tymek": "Tymoteusz",
+"Grzesiek": "Grzegorz",
+"Emilka": "Emilia",
+"Janek": "Jan",
+"Mela": "Melania",
+"Aga": "Agnieszka",
+"Antek": "Antoni",
+"Kasia": "Katarzyna"
+"Franek": "Franciszek",
+"Remek": "Remigiusz",
+
     };
 
     function normalizeName(str) {
@@ -249,7 +262,7 @@
           if (parts.length < 2) continue;
           const fullLast = parts[1];
           const distance = levenshtein(fullLast, lastName);
-          if (distance <= 2) {
+          if (distance <= 2) { // dopuszczalna różnica literówek
             matches.push([name, table, distance]);
           }
         }
