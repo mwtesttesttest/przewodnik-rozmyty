@@ -141,23 +141,35 @@
   <div id="result" aria-live="polite" role="alert"></div>
 
   <script>
-    const guests = {
-      "Michał Niewęgłowski": 3,
-      "Aleksandra Olszyńska": 5,
-      "Aleksandra Makarewicz": 1,
-      "Olga Wojdyga": 2,
-      "Zuzanna Bolek": 4,
-      "Mateusz Wunderlich": 12,
-      "Maja Chodór": 13,
-      "Izabela Bogucka": 14,
-      "Kinga Wilczyńska": 15,
-      "Alicja Szulc": 16,
-      "Dawid Dudziński": 18,
-      "Joanna Nowak": 17,
-      "Bartosz Kowalski": 19,
-      "Julia Kot": 18,
-      "Julcia Kot": 200,
-    };
+    const names = [
+      "Michał Niewęgłowski",
+      "Aleksandra Olszyńska",
+      "Aleksandra Makarewicz",
+      "Olga Wojdyga",
+      "Zuzanna Bolek",
+      "Mateusz Wunderlich",
+      "Maja Chodór",
+      "Izabela Bogucka",
+      "Kinga Wilczyńska",
+      "Alicja Szulc",
+      "Dawid Dudziński",
+      "Joanna Nowak",
+      "Bartosz Kowalski",
+      "Julia Kot",
+      "Julcia Kot"
+    ];
+
+    const guests = {};
+
+    names.forEach((name, i) => {
+      if (i < 4) {
+        guests[name] = 1; // pierwsze 4 osoby -> stół 1
+      } else if (i < 8) {
+        guests[name] = 3; // kolejne 4 osoby -> stół 3
+      } else {
+        guests[name] = 5; // reszta -> stół 5
+      }
+    });
 
     const nicknameMap = {
       "ola": "aleksandra",
@@ -237,7 +249,7 @@
           if (parts.length < 2) continue;
           const fullLast = parts[1];
           const distance = levenshtein(fullLast, lastName);
-          if (distance <= 2) { // dopuszczalna różnica literówek
+          if (distance <= 2) {
             matches.push([name, table, distance]);
           }
         }
@@ -323,4 +335,3 @@
 
 </body>
 </html>
-
