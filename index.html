@@ -141,38 +141,26 @@
   <div id="result" aria-live="polite" role="alert"></div>
 
   <script>
-    const names = [
-  "Martyna Bartoszczyk",
-  "Maciej Biskupski",
-  "Maja Błońska",
-  "Zuzanna Betiuk",
-  "Natalia Fidut",
-  "Gabriela Klonowska",
-  "Kinga Bielarska",
-  "Oliwia Beznosik",
-  "Aleksandra Bień",
-  "Szymon Bielecki",
-  "Martyna Błażyca",
-  "Mikołaj Brzusek",
-  "Kasjana Budzałek",
-  "Antonina Budzyń",
-  "Martyna Bursztyka",
-  "Wojciech Żukowski",
-  "Anna Mazur",
-  "Karol Śnieżek"
-    ];
-
-    const guests = {};
-
-    names.forEach((name, i) => {
-      if (i < 4) {
-        guests[name] = 1; // pierwsze 4 osoby -> stół 1
-      } else if (i < 8) {
-        guests[name] = 3; // kolejne 4 osoby -> stół 3
-      } else {
-        guests[name] = 5; // reszta -> stół 5
-      }
-    });
+    const guests = {
+      "Martyna Bartoszczyk": 1,
+      "Maciej Biskupski": 1,
+      "Maja Błońska": 1,
+      "Zuzanna Betiuk": 1,
+      "Natalia Fidut": 3,
+      "Gabriela Klonowska": 3,
+      "Kinga Bielarska": 3,
+      "Oliwia Beznosik": 3,
+      "Aleksandra Bień": 5,
+      "Szymon Bielecki": 5,
+      "Martyna Błażyca": 5,
+      "Mikołaj Brzusek": 5,
+      "Kasjana Budzałek": 5,
+      "Antonina Budzyń": 5,
+      "Martyna Bursztyka": 5,
+      "Wojciech Żukowski": 5,
+      "Anna Mazur": 5,
+      "Karol Śnieżek": 5
+    };
 
     const nicknameMap = {
       "ola": "aleksandra",
@@ -196,36 +184,33 @@
       "piotruś": "piotr",
       "krzyś": "krzysztof",
       "Maciek": "Maciej",
-"Oliwka": "Oliwka",
-"Kuba": "Jakub",
-"Paula": "Paulina",
-"Wojtek": "Wojciech",
-"Wera": "Weronika",
-"Ala": "Alicja",
-"Ania": "Anna",
-"Zosia": "Zofia",
-"Tomek": "Tomek",
-"Pola": "Apolonia",
-"Magda": "Magdalena",
-"Madzia": "Magdalena",
-"Kvitka": "Kvitoslava",
-"Gabrysia": "Gabriela",
-"Jola": "Jolanta",
-"Michasia": "Michalina",
-"Marysia": "Maria",
-"Janek": "Jan",
-"Ania": "Anna",
-"Stasiek": "Stanisław",
-"Tymek": "Tymoteusz",
-"Grzesiek": "Grzegorz",
-"Emilka": "Emilia",
-"Janek": "Jan",
-"Mela": "Melania",
-"Aga": "Agnieszka",
-"Antek": "Antoni",
-"Kasia": "Katarzyna",
-"Franek": "Franciszek",
-"Remek": "Remigiusz"
+      "Oliwka": "Oliwia",
+      "Kuba": "Jakub",
+      "Paula": "Paulina",
+      "Wojtek": "Wojciech",
+      "Wera": "Weronika",
+      "Ala": "Alicja",
+      "Ania": "Anna",
+      "Zosia": "Zofia",
+      "Tomek": "Tomasz",
+      "Pola": "Apolonia",
+      "Magda": "Magdalena",
+      "Madzia": "Magdalena",
+      "Kvitka": "Kvitoslava",
+      "Gabrysia": "Gabriela",
+      "Jola": "Jolanta",
+      "Michasia": "Michalina",
+      "Marysia": "Maria",
+      "Janek": "Jan",
+      "Stasiek": "Stanisław",
+      "Tymek": "Tymoteusz",
+      "Grzesiek": "Grzegorz",
+      "Emilka": "Emilia",
+      "Mela": "Melania",
+      "Aga": "Agnieszka",
+      "Antek": "Antoni",
+      "Franek": "Franciszek",
+      "Remek": "Remigiusz"
     };
 
     function normalizeName(str) {
@@ -369,6 +354,3 @@
 
 </body>
 </html>
-
-
-
