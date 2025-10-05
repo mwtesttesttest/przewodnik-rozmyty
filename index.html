@@ -32,8 +32,8 @@
     }
 
     .logo {
-      width: 250px;
-      margin-top: 120px;
+      width: 180px;
+      margin-top: 80px;
       opacity: 0.7;
     }
 
@@ -112,40 +112,40 @@
       margin-top: 20px;
     }
 
-  /* Julia Kot gold buttons - jaśniejsze, eleganckie złoto */
-.julia-group-button {
-  background: linear-gradient(145deg, #fff8e1, #ffd700); /* jaśniejsze złoto gradient */
-  background-size: 200% 200%;
-  color: black;
-  font-family: Arial, sans-serif;
-  font-size: 18px;
-  font-weight: bold;
-  padding: 40px 50px;
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-  transition: transform 0.2s, box-shadow 0.2s;
-}
+    /* Kontener przycisków Julii Kot - ustawienie w rzędzie */
+    .julia-group-container {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
 
-.julia-group-button::after {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIW2N89+7dfwAHgwKk75Mz5wAAAABJRU5ErkJggg=='); /* przykładowy szum */
-  opacity: 0.15; /* delikatna tekstura drobinek */
-  pointer-events: none;
-}
-      }
-      button {
-        width: 40px;
-        height: 40px;
-        font-size: 18px;
+    /* Przyciski Julii Kot */
+    .julia-group-button {
+      background: linear-gradient(145deg, #fff8e1, #ffd700);
+      color: black;
+      font-family: Arial, sans-serif;
+      font-size: 18px;
+      font-weight: bold;
+      padding: 40px 50px;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .julia-group-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+
+    @media (max-width: 500px) {
+      .julia-group-button {
+        padding: 30px 40px;
+        font-size: 16px;
       }
       .logo {
-        width: 180px;
-        margin-top: 80px;
+        width: 150px;
       }
     }
   </style>
@@ -160,6 +160,7 @@
   </div>
 
   <div id="result" aria-live="polite" role="alert"></div>
+
 
   <script>
    const guests = {
@@ -712,6 +713,7 @@
   </script>
 </body>
 </html>
+
 
 
 
