@@ -112,40 +112,41 @@
       margin-top: 20px;
     }
 
-    /* Kafelki Julii Kot */
-    .julia-group-container {
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-      align-items: flex-start;
-      gap: 25px;
-      flex-wrap: wrap;
-      margin-top: 20px;
-    }
-
     .julia-group-button {
-      background: linear-gradient(145deg, #fffbe0, #ffe066);
-      color: black;
-      font-family: Arial, sans-serif;
-      font-size: 20px;
-      font-weight: bold;
-      padding: 60px 40px;
-      border: none;
-      border-radius: 16px;
-      cursor: pointer;
-      transition: transform 0.3s, box-shadow 0.3s;
-      min-width: 120px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-    }
+  background: linear-gradient(145deg, #fffde0, #ffe680); /* jaśniejsze złoto */
+  color: black;
+  font-family: Arial, sans-serif;
+  font-size: 20px;
+  font-weight: bold;
+  padding: 60px 40px;
+  border: none;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: transform 0.3s, box-shadow 0.3s;
+  min-width: 120px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
 
-    .julia-group-button:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 20px rgba(0,0,0,0.3);
-    }
+/* Drobinki złota */
+.julia-group-button::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIW2N89+7dfwAHgwKk75Mz5wAAAABJRU5ErkJggg==');
+  opacity: 0.15; /* delikatna tekstura drobinek */
+  pointer-events: none;
+}
+
+.julia-group-button:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+}
 
     @media (max-width: 500px) {
       .julia-group-container {
@@ -729,3 +730,4 @@
   </script>
 </body>
 </html>
+
