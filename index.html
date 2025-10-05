@@ -10,7 +10,6 @@
       padding: 0;
       height: 100%;
       width: 100%;
-      overflow-x: hidden;
       font-family: Arial, sans-serif;
     }
 
@@ -27,7 +26,6 @@
       align-items: center;
       justify-content: flex-start;
       min-height: 100vh;
-      box-sizing: border-box;
       padding: 50px 20px;
     }
 
@@ -56,76 +54,70 @@
       background-color: rgba(255, 255, 255, 0.9);
       color: #000;
       font-weight: bold;
-      transition: box-shadow 0.3s ease, border-color 0.3s ease;
-    }
-
-    input:focus {
-      border-color: #daa520;
-      box-shadow: 0 0 10px 3px rgba(218, 165, 32, 0.8);
-      background-color: #fff;
     }
 
     button {
       width: 48px;
       height: 48px;
       font-size: 20px;
-      margin-left: 0;
-      cursor: pointer;
       border: none;
       border-radius: 0 4px 4px 0;
       background-color: #444;
       color: #fff;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 0;
-      transition: background-color 0.3s ease;
-    }
-
-    button:hover {
-      background-color: #666;
+      cursor: pointer;
     }
 
     #result {
       margin-top: 30px;
-      font-size: 20px;
-      font-weight: bold;
-      color: #000;
-      background-color: rgba(255, 255, 255, 0.8);
-      padding: 15px 20px;
-      border-radius: 8px;
-      max-width: 90%;
-      word-wrap: break-word;
-      opacity: 0;
-      transform: translateY(10px);
-      transition: opacity 0.5s ease, transform 0.5s ease;
-      position: relative;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 20px;
     }
 
-    #result.show {
-      opacity: 1;
-      transform: translateY(0);
+    .card {
+      background: rgba(255,255,255,0.9);
+      color: #000;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      width: 260px;
+      transition: transform 0.3s ease;
     }
+
+    .card:hover { transform: scale(1.05); }
+
+    .card h2 {
+      margin: 0;
+      font-size: 24px;
+      color: #daa520;
+    }
+
+    .card p { margin: 10px 0 0; font-weight: bold; }
 
     .table-image {
-      width: 100px;
-      margin-top: 20px;
+      width: 80px;
+      margin-top: 15px;
     }
 
-    @media (max-width: 480px) {
-      input {
-        padding: 12px;
-        font-size: 16px;
-      }
-      button {
-        width: 40px;
-        height: 40px;
-        font-size: 18px;
-      }
-      .logo {
-        width: 180px;
-        margin-top: 80px;
-      }
+    #organizerPanel {
+      margin-top: 50px;
+      background: rgba(0,0,0,0.6);
+      padding: 20px;
+      border-radius: 8px;
+      max-width: 500px;
+      display: none;
+    }
+
+    #guestList {
+      text-align: left;
+      max-height: 300px;
+      overflow-y: auto;
+      background: #fff;
+      color: #000;
+      padding: 10px;
+      border-radius: 6px;
+      margin-top: 15px;
     }
   </style>
 </head>
@@ -134,11 +126,18 @@
   <img src="logo.png" alt="Logo imprezy" class="logo" />
 
   <div class="input-group">
-    <input type="text" id="guestName" placeholder="Imię i nazwisko" autocomplete="off" aria-label="Wpisz imię i nazwisko" />
-    <button onclick="findTable()" aria-label="Szukaj">🔍</button>
+    <input type="text" id="guestName" placeholder="Imię i nazwisko lub numer stołu" autocomplete="off" />
+    <button onclick="findTable()">🔍</button>
   </div>
 
-  <div id="result" aria-live="polite" role="alert"></div>
+  <div id="result"></div>
+
+  <button style="margin-top:30px;" onclick="toggleOrganizerPanel()">Panel organizatora</button>
+  <div id="organizerPanel">
+    <h3>Panel organizatora</h3>
+    <input type="number" id="tableFilter" placeholder="Filtruj po numerze stołu" style="padding:8px; width:100%;" />
+    <div id="guestList"></div>
+  </div>
 
   <script>
     const guests = {
@@ -162,193 +161,65 @@
       "Karol Śnieżek": 5
     };
 
-    const nicknameMap = {
-      "ola": "aleksandra",
-      "aleks": "aleksandra",
-      "sandra": "aleksandra",
-      "alutka": "aleksandra",
-      "matek": "mateusz",
-      "mati": "mateusz",
-      "iza": "izabela",
-      "zuzia": "zuzanna",
-      "zuzka": "zuzanna",
-      "ala": "alicja",
-      "kasia": "katarzyna",
-      "kacha": "katarzyna",
-      "basia": "barbara",
-      "gosia": "małgorzata",
-      "małgosia": "małgorzata",
-      "asia": "joanna",
-      "joasia": "joanna",
-      "bartek": "bartosz",
-      "piotruś": "piotr",
-      "krzyś": "krzysztof",
-      "Maciek": "Maciej",
-      "Oliwka": "Oliwia",
-      "Kuba": "Jakub",
-      "Paula": "Paulina",
-      "Wojtek": "Wojciech",
-      "Wera": "Weronika",
-      "Ala": "Alicja",
-      "Ania": "Anna",
-      "Zosia": "Zofia",
-      "Tomek": "Tomasz",
-      "Pola": "Apolonia",
-      "Magda": "Magdalena",
-      "Madzia": "Magdalena",
-      "Kvitka": "Kvitoslava",
-      "Gabrysia": "Gabriela",
-      "Jola": "Jolanta",
-      "Michasia": "Michalina",
-      "Marysia": "Maria",
-      "Janek": "Jan",
-      "Stasiek": "Stanisław",
-      "Tymek": "Tymoteusz",
-      "Grzesiek": "Grzegorz",
-      "Emilka": "Emilia",
-      "Mela": "Melania",
-      "Aga": "Agnieszka",
-      "Antek": "Antoni",
-      "Franek": "Franciszek",
-      "Remek": "Remigiusz"
-    };
-
-    function normalizeName(str) {
-      return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
-    }
-
-    function mapNicknameToFull(name) {
-      return nicknameMap[name] || name;
-    }
-
-    function levenshtein(a, b) {
-      const matrix = [];
-      for (let i = 0; i <= b.length; i++) matrix[i] = [i];
-      for (let j = 0; j <= a.length; j++) matrix[0][j] = j;
-
-      for (let i = 1; i <= b.length; i++) {
-        for (let j = 1; j <= a.length; j++) {
-          if (b.charAt(i - 1) === a.charAt(j - 1)) {
-            matrix[i][j] = matrix[i - 1][j - 1];
-          } else {
-            matrix[i][j] = Math.min(
-              matrix[i - 1][j - 1] + 1,
-              matrix[i][j - 1] + 1,
-              matrix[i - 1][j] + 1
-            );
-          }
-        }
-      }
-      return matrix[b.length][a.length];
+    function createCard(name, table) {
+      return `<div class="card">
+                <h2>Stół ${table}</h2>
+                <p>${name}</p>
+                <img src="stol.png" alt="Stół" class="table-image">
+              </div>`;
     }
 
     function findTable() {
-      const input = document.getElementById('guestName');
-      const rawInput = input.value.trim();
-      const nameInput = normalizeName(rawInput);
-      const resultDiv = document.getElementById('result');
+      const input = document.getElementById("guestName").value.trim();
+      const resultDiv = document.getElementById("result");
+      resultDiv.innerHTML = "";
 
-      input.blur();
+      if (!input) return;
 
-      if (!nameInput) {
-        showResult("Proszę wpisać imię i nazwisko lub nazwisko.");
+      // Jeśli wpisano numer stołu
+      if (!isNaN(input)) {
+        const tableNum = parseInt(input);
+        const matches = Object.entries(guests).filter(([n, t]) => t === tableNum);
+        if (matches.length) {
+          resultDiv.innerHTML = matches.map(([n, t]) => createCard(n, t)).join("");
+        } else {
+          resultDiv.innerHTML = `<p>Brak osób przy tym stole.</p>`;
+        }
         return;
       }
 
-      const inputWords = nameInput.split(/\s+/).filter(Boolean);
-
-      if (inputWords.length === 1) {
-        // Szukamy po nazwisku
-        const lastName = inputWords[0];
-        const matches = [];
-
-        for (const [name, table] of Object.entries(guests)) {
-          const normalizedFull = normalizeName(name);
-          const parts = normalizedFull.split(" ");
-          if (parts.length < 2) continue;
-          const fullLast = parts[1];
-          const distance = levenshtein(fullLast, lastName);
-          if (distance <= 2) {
-            matches.push([name, table, distance]);
-          }
-        }
-
-        if (matches.length === 1) {
-          const [foundName, foundTable] = matches[0];
-          showResult(`Witaj, <strong>${foundName}</strong>! Twój stół to numer <strong>${foundTable}</strong>.<br>
-            <img src="stol.png" alt="Stół" class="table-image">`);
-          return;
-        } else if (matches.length > 1) {
-          showResult("Znaleziono kilka osób o tym nazwisku. Proszę podać imię i nazwisko.");
-          return;
-        } else {
-          showResult("Nie znaleziono gościa o podanym nazwisku.");
-          return;
-        }
-      }
-
-      if (inputWords.length >= 2) {
-        let [inputFirst, inputLast] = inputWords;
-        inputFirst = mapNicknameToFull(inputFirst);
-
-        // Dokładne dopasowanie
-        for (const [name, table] of Object.entries(guests)) {
-          const normalizedFull = normalizeName(name);
-          const [fullFirst, fullLast] = normalizedFull.split(" ");
-          if (mapNicknameToFull(fullFirst) === inputFirst && fullLast === inputLast) {
-            showResult(`Witaj, <strong>${name}</strong>! Twój stół to numer <strong>${table}</strong>.<br>
-              <img src="stol.png" alt="Stół" class="table-image">`);
-            return;
-          }
-        }
-
-        // Przybliżone dopasowanie z wagą
-        let bestMatch = null;
-        let bestScore = Infinity;
-
-        for (const [name, table] of Object.entries(guests)) {
-          const normalizedName = normalizeName(name);
-          const nameParts = normalizedName.split(/\s+/);
-          if (nameParts.length < 2) continue;
-
-          let [first, last] = nameParts;
-          first = mapNicknameToFull(first);
-
-          const firstDistance = levenshtein(first, inputFirst);
-          const lastDistance = levenshtein(last, inputLast);
-
-          const weightedScore = firstDistance * 1 + lastDistance * 2;
-
-          if (weightedScore < bestScore) {
-            bestScore = weightedScore;
-            bestMatch = [name, table];
-          }
-        }
-
-        const maxScore = 4;
-        if (bestMatch && bestScore <= maxScore) {
-          showResult(`Witaj, <strong>${bestMatch[0]}</strong>! Twój stół to numer <strong>${bestMatch[1]}</strong>.<br>
-            <img src="stol.png" alt="Stół" class="table-image">`);
-        } else {
-          showResult("Nie znaleziono gościa o podanym imieniu i nazwisku.");
-        }
+      // Wyszukiwanie po nazwisku/imieniu
+      const match = Object.entries(guests).find(([n, t]) => n.toLowerCase() === input.toLowerCase());
+      if (match) {
+        const [name, table] = match;
+        resultDiv.innerHTML = createCard(name, table);
+      } else {
+        resultDiv.innerHTML = `<p>Nie znaleziono gościa.</p>`;
       }
     }
 
-    function showResult(html) {
-      const resultDiv = document.getElementById('result');
-      resultDiv.innerHTML = html;
-      resultDiv.classList.add('show');
-
-      setTimeout(() => {
-        resultDiv.classList.remove('show');
-      }, 8000);
+    function toggleOrganizerPanel() {
+      const panel = document.getElementById("organizerPanel");
+      panel.style.display = panel.style.display === "block" ? "none" : "block";
+      renderGuestList();
     }
 
-    document.getElementById("guestName").addEventListener("keypress", function(event) {
-      if (event.key === "Enter") {
-        findTable();
+    function renderGuestList(filter = null) {
+      const listDiv = document.getElementById("guestList");
+      let entries = Object.entries(guests);
+      if (filter) {
+        entries = entries.filter(([n, t]) => t === filter);
       }
+      listDiv.innerHTML = entries.map(([n, t]) => `<div>➡ ${n} – stół ${t}</div>`).join("");
+    }
+
+    document.getElementById("tableFilter").addEventListener("input", e => {
+      const val = parseInt(e.target.value);
+      renderGuestList(isNaN(val) ? null : val);
+    });
+
+    document.getElementById("guestName").addEventListener("keypress", e => {
+      if (e.key === "Enter") findTable();
     });
   </script>
 
