@@ -113,28 +113,29 @@
     }
 
     <style>
-/* Kontener przycisków Julii Kot */
+<style>
 .julia-group-container {
   display: flex;
+  flex-direction: row;      /* ustawienie w rzędzie */
   justify-content: center;
-  gap: 25px;       /* większy odstęp między kafelkami */
-  flex-wrap: wrap;
+  align-items: flex-start;  /* wyrównanie kafelków do góry */
+  gap: 25px;                /* odstęp między kafelkami */
+  flex-wrap: wrap;          /* pozwala na wrap na małych ekranach */
   margin-top: 20px;
 }
 
-/* Przyciski Julii Kot - większe, prostokąt pionowy, jaśniejsze złoto */
 .julia-group-button {
   background: linear-gradient(145deg, #fffbe0, #ffe066); /* jaśniejsze złoto */
   color: black;
   font-family: Arial, sans-serif;
-  font-size: 20px;      /* większa czcionka */
+  font-size: 20px;
   font-weight: bold;
-  padding: 60px 40px;   /* wydłużony pionowo */
+  padding: 60px 40px;      /* wydłużony pionowo */
   border: none;
-  border-radius: 16px;  /* bardziej zaokrąglone rogi */
+  border-radius: 16px;
   cursor: pointer;
   transition: transform 0.3s, box-shadow 0.3s;
-  min-width: 120px;     /* minimalna szerokość przycisku */
+  min-width: 120px;        /* minimalna szerokość */
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -146,8 +147,19 @@
   transform: translateY(-5px);
   box-shadow: 0 10px 20px rgba(0,0,0,0.3);
 }
+
+/* Opcjonalnie: responsywne ustawienie dla małych ekranów */
+@media (max-width: 500px) {
+  .julia-group-container {
+    flex-direction: column;
+    align-items: center;
+  }
+  .julia-group-button {
+    padding: 50px 30px;
+    font-size: 18px;
+  }
+}
 </style>
-    }
 
     @media (max-width: 500px) {
       .julia-group-button {
@@ -722,6 +734,7 @@
   </script>
 </body>
 </html>
+
 
 
 
