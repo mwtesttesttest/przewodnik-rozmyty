@@ -490,9 +490,6 @@
   "Magdalena Rejman": 16
 }; 
 
-      
-
-
     const nicknameMap = {
       "ola": "aleksandra",
       "aleks": "aleksandra",
@@ -573,6 +570,11 @@
       return matrix[b.length][a.length];
     }
 
+    const juliaKotData = [
+      { table: 6, group: 33 },
+      { table: 8, group: 102 }
+    ];
+
     function findTable() {
       const input = document.getElementById('guestName');
       const rawInput = input.value.trim();
@@ -583,6 +585,17 @@
 
       if (!nameInput) {
         showResult("Proszę wpisać imię i nazwisko lub nazwisko.");
+        return;
+      }
+
+      // Specjalny przypadek dla Julia Kot
+      if (rawInput.toLowerCase() === "julia kot") {
+        let html = `<p>Z której grupy jesteś?</p>`;
+        juliaKotData.forEach(entry => {
+          html += `<button onclick="showFinalResult('Julia Kot', ${entry.table}, ${entry.group})">Grupa ${entry.group}</button>`;
+        });
+        resultDiv.innerHTML = html;
+        resultDiv.classList.add('show');
         return;
       }
 
@@ -606,8 +619,7 @@
 
         if (matches.length === 1) {
           const [foundName, foundTable] = matches[0];
-          showResult(`Witaj, <strong>${foundName}</strong>! Twój stół to numer <strong>${foundTable}</strong>.<br>
-            <img src="stol.png" alt="Stół" class="table-image">`);
+          showFinalResult(foundName, foundTable);
           return;
         } else if (matches.length > 1) {
           showResult("Znaleziono kilka osób o tym nazwisku. Proszę podać imię i nazwisko.");
@@ -622,18 +634,15 @@
         let [inputFirst, inputLast] = inputWords;
         inputFirst = mapNicknameToFull(inputFirst);
 
-        // Dokładne dopasowanie
         for (const [name, table] of Object.entries(guests)) {
           const normalizedFull = normalizeName(name);
           const [fullFirst, fullLast] = normalizedFull.split(" ");
           if (mapNicknameToFull(fullFirst) === inputFirst && fullLast === inputLast) {
-            showResult(`Witaj, <strong>${name}</strong>! Twój stół to numer <strong>${table}</strong>.<br>
-              <img src="stol.png" alt="Stół" class="table-image">`);
+            showFinalResult(name, table);
             return;
           }
         }
 
-        // Przybliżone dopasowanie z wagą
         let bestMatch = null;
         let bestScore = Infinity;
 
@@ -658,31 +667,29 @@
 
         const maxScore = 4;
         if (bestMatch && bestScore <= maxScore) {
-          showResult(`Witaj, <strong>${bestMatch[0]}</strong>! Twój stół to numer <strong>${bestMatch[1]}</strong>.<br>
-            <img src="stol.png" alt="Stół" class="table-image">`);
-        } else {
-          showResult("Nie znaleziono gościa o podanym imieniu i nazwisku.");
+          showFinalResult(bestMatch[0], bestMatch[1]);
+        } else
+showResult("Nie znaleziono gościa o podanym imieniu i nazwisku.");
         }
       }
     }
 
-    function showResult(html) {
+    function showFinalResult(name, table, group = null) {
       const resultDiv = document.getElementById('result');
-      resultDiv.innerHTML = html;
+      let message = `${name} - stół nr ${table}`;
+      if (group !== null) {
+        message += ` (grupa ${group})`;
+      }
+      resultDiv.innerHTML = message + `<br><img src="table${table}.png" alt="Stół ${table}" class="table-image" />`;
       resultDiv.classList.add('show');
-
-      setTimeout(() => {
-        resultDiv.classList.remove('show');
-      }, 8000);
     }
 
-    document.getElementById("guestName").addEventListener("keypress", function(event) {
-      if (event.key === "Enter") {
-        findTable();
-      }
-    });
-  </script>
+    function showResult(msg) {
+      const resultDiv = document.getElementById('result');
+      resultDiv.innerHTML = msg;
+      resultDiv.classList.add('show');
+    }
 
+  </script>
 </body>
 </html>
-
