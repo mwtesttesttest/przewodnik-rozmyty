@@ -668,8 +668,8 @@
         const maxScore = 4;
         if (bestMatch && bestScore <= maxScore) {
           showFinalResult(bestMatch[0], bestMatch[1]);
-        } else
-showResult("Nie znaleziono gościa o podanym imieniu i nazwisku.");
+        } else {
+          showResult("Nie znaleziono gościa o podanym imieniu i nazwisku.");
         }
       }
     }
