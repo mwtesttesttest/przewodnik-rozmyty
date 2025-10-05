@@ -113,34 +113,30 @@
     }
 
   /* Julia Kot gold buttons - jaśniejsze, eleganckie złoto */
-.julia-group-container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  margin-top: 30px;
-  gap: 20px;
-}
-
 .julia-group-button {
-  background-color: #ffd700; /* jaśniejsze złoto */
+  background: linear-gradient(145deg, #fff8e1, #ffd700); /* jaśniejsze złoto gradient */
+  background-size: 200% 200%;
   color: black;
   font-family: Arial, sans-serif;
-  font-size: 18px; /* troszkę mniejsze napisy */
+  font-size: 18px;
   font-weight: bold;
-  padding: 40px 50px; /* większe kwadraty */
+  padding: 40px 50px;
   border: none;
   border-radius: 12px;
   cursor: pointer;
+  position: relative;
+  overflow: hidden;
   transition: transform 0.2s, box-shadow 0.2s;
 }
 
-.julia-group-button:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 20px rgba(255, 215, 0, 0.8); /* jaśniejszy efekt hover */
-    @media (max-width: 480px) {
-      input {
-        padding: 12px;
-        font-size: 16px;
+.julia-group-button::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIW2N89+7dfwAHgwKk75Mz5wAAAABJRU5ErkJggg=='); /* przykładowy szum */
+  opacity: 0.15; /* delikatna tekstura drobinek */
+  pointer-events: none;
+}
       }
       button {
         width: 40px;
@@ -716,6 +712,7 @@
   </script>
 </body>
 </html>
+
 
 
 
