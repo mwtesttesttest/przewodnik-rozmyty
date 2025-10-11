@@ -112,17 +112,18 @@
       margin-top: 20px;
     }
 
-    /* Mały obrazek z napisem MENU */
+    /* Mały obrazek z napisem MENU – wyśrodkowany na dole */
     .menu-image-container {
       position: fixed;
-      bottom: 20px;
-      right: 20px;
-      text-align: right;
+      bottom: 25px;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
       z-index: 100;
     }
 
     .menu-image-container img {
-      width: 80px; /* mniejszy niż logo */
+      width: 90px; /* mały rozmiar */
       opacity: 0.85;
       cursor: pointer;
       transition: transform 0.3s ease, opacity 0.3s ease;
@@ -133,7 +134,7 @@
       opacity: 1;
     }
 
-    /* Kafelki Julii Kot (dla kontekstu strony) */
+    /* Styl przycisków grupy Julii Kot */
     .julia-group-container {
       display: flex;
       flex-direction: row;
@@ -201,11 +202,11 @@
 
   <!-- Stały mały przycisk z napisem MENU -->
   <div class="menu-image-container">
-    <a href="https://www.twojastrona.com/menu">
-      <img src="napismenu.jpg" alt="Menu">
+    <a href="https://mwtesttesttest.github.io/menu/">
+      <img src="napismenu.png" alt="Menu">
     </a>
   </div>
-
+  
   <script>
    const guests = {
   "Martyna Dec": 1,
@@ -952,6 +953,7 @@
   </script>
 </body>
 </html>
+
 
 
 
