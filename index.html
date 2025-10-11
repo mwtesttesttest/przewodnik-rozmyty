@@ -34,7 +34,7 @@
     .logo {
       width: 180px;
       margin-top: 80px;
-      opacity: 0.8;
+      opacity: 0.85;
     }
 
     .input-group {
@@ -112,10 +112,10 @@
       margin-top: 20px;
     }
 
-    /* Mały obrazek z napisem MENU – wyśrodkowany na dole */
+    /* Obrazek MENU – powiększony, wyśrodkowany i zakotwiczony na dole */
     .menu-image-container {
       position: fixed;
-      bottom: 25px;
+      bottom: 35px;
       left: 50%;
       transform: translateX(-50%);
       text-align: center;
@@ -123,9 +123,10 @@
     }
 
     .menu-image-container img {
-      width: 90px; /* mały rozmiar */
-      opacity: 0.85;
+      width: 150px; /* powiększony obraz */
+      opacity: 0.9;
       cursor: pointer;
+      border-radius: 15px; /* zaokrąglone rogi */
       transition: transform 0.3s ease, opacity 0.3s ease;
     }
 
@@ -186,6 +187,9 @@
         padding: 50px 30px;
         font-size: 18px;
       }
+      .menu-image-container img {
+        width: 120px;
+      }
     }
   </style>
 </head>
@@ -200,7 +204,7 @@
 
   <div id="result" aria-live="polite" role="alert"></div>
 
-  <!-- Stały mały przycisk z napisem MENU -->
+  <!-- Obrazek MENU na środku dolnej krawędzi -->
   <div class="menu-image-container">
     <a href="https://mwtesttesttest.github.io/menu/">
       <img src="napismenu.png" alt="Menu">
@@ -953,6 +957,7 @@
   </script>
 </body>
 </html>
+
 
 
 
